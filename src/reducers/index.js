@@ -10,6 +10,8 @@ function reducer(state = { posts:[], comments:[] }, action) {
   const { data, property, id } = action;
   switch (action.type) {
     case ADD:
+    console.log(property);
+    console.log(state[property]);
       return {
         ...state,
         [property]: state[property].concat([data])
