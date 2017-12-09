@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal'
 import { connect } from 'react-redux';
-import { add } from '../actions';
+import { edit } from '../actions';
 import * as api from '../utils/api';
-import shortid from 'shortid';
 import '../App.css';
 
-class CreatePost extends Component {
+class EditPost extends Component {
 
   constructor(props) {
     super(props);
@@ -21,6 +20,15 @@ class CreatePost extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount() {
+    this.setState({
+      title: this.props.post.title,
+      body: this.props.post.body,
+      author: this.props.post.author,
+      category: this.props.category,
+    });
+  }
+
   handleInputChange(event) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -33,20 +41,13 @@ class CreatePost extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const post = {
-      id: shortid.generate(),
-      timestamp: Date.now(),
+    const updatedPost = {
       title: this.state.title,
       body: this.state.body,
-      author: this.state.author,
-      category: this.state.category,
-      voteScore: 1,
-      commentCount: 0,
-      deleted: false,
     };
 
-    this.props.addPost({data: post, property:"posts"});
-    api.addPost(JSON.stringify(post));
+    this.props.editPost({ id: this.props.post.id, data: updatedPost, property:'posts' });
+    api.editPost(this.props.post.id, JSON.stringify(updatedPost));
     this.props.closeModal();
   }
 
@@ -62,7 +63,7 @@ class CreatePost extends Component {
         {
           this.props.isOpen === true
           ? <div>
-            <h1>Create Post</h1>
+            <h1>Edit Post</h1>
             <form onSubmit={this.handleSubmit} className="createPostForm">
               <label className="createPostLabel">
                 Title:
@@ -74,18 +75,18 @@ class CreatePost extends Component {
               </label>
               <label className="createPostLabel">
                 Author:
-                <input type="text" name="author" value={this.state.author} onChange={this.handleInputChange} />
+                <input type="text" name="author" value={this.state.author} readOnly={true} />
               </label>
               <label className="createPostLabel">
                 Category:
-                <select name="category" value={this.state.Category} onChange={this.handleInputChange}>
+                <select name="category" value={this.state.Category} disabled={true}>
                   <option value="react">React</option>
                   <option value="redux">Redux</option>
                   <option value="js">Javascript</option>
                   <option value="functional">Functional Programming</option>
                 </select>
               </label>
-              <input type="submit" value="Submit"/>
+              <input type="submit" value="Update"/>
             </form>
           </div>
           : null
@@ -101,8 +102,8 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    addPost: (data) => dispatch(add(data)),
+    editPost: (data) => dispatch(edit(data)),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreatePost);
+export default connect(mapStateToProps, mapDispatchToProps)(EditPost);

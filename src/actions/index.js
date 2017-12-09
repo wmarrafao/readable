@@ -1,9 +1,11 @@
-export const ADD = "ADD"
-export const EDIT = "EDIT"
-export const REMOVE = "REMOVE"
-export const INCREMENT_SCORE = "INCREMENT_SCORE"
-export const DECREMENT_SCORE = "DECREMENT_SCORE"
+import * as api from '../utils/api';
 
+export const ADD = "ADD";
+export const EDIT = "EDIT";
+export const REMOVE = "REMOVE";
+export const INCREMENT_SCORE = "INCREMENT_SCORE";
+export const DECREMENT_SCORE = "DECREMENT_SCORE";
+export const RECEIVE_POSTS = "RECEIVE_POSTS";
 
 export function add ({ data, property }) {
   return {
@@ -13,9 +15,10 @@ export function add ({ data, property }) {
   };
 }
 
-export function edit ({ data, property }) {
+export function edit ({ id, data, property }) {
   return {
     type: EDIT,
+    id,
     data,
     property
   };
@@ -44,3 +47,19 @@ export function downvote ({ id, property }) {
     property
   }
 }
+
+export const receivePosts = ({ data, property }) => {
+  return {
+    type: RECEIVE_POSTS,
+    data,
+    property
+  }
+};
+
+export const fetchPosts = () => dispatch => (
+  api.fetchPosts().then((response) => {
+    response.json().then((posts) => {
+      dispatch(receivePosts({data: posts, property: 'posts'}))
+    });
+  })
+);
