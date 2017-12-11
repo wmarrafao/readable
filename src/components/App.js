@@ -12,7 +12,7 @@ class App extends Component {
   state = {
     createPostModalOpen: false,
     editPostModalOpen: false,
-    postId: undefined,
+    sortPostsBy: "-voteScore",
   };
 
   componentDidMount() {
@@ -59,6 +59,9 @@ class App extends Component {
     api.deletePost(id);
   };
 
+  handleSortChange = (event) => {
+    this.setState({sortPostsBy: event.target.value});
+  }
   render() {
     return (
       <div className="root">
@@ -76,6 +79,13 @@ class App extends Component {
         </div>
         <br/>
         <button onClick={this.openCreatePostModal}>New Post</button>
+        <label>
+          Order by:
+          <select onChange={this.handleSortChange} value={this.state.sortPostsBy}>
+            <option value="-timestamp">date</option>
+            <option value="-voteScore">points</option>
+          </select>
+        </label>
         <br/>
         <br/>
         <CreatePost isOpen={this.state.createPostModalOpen} closeModal={this.closeCreatePostModal}/>
@@ -91,6 +101,7 @@ class App extends Component {
         <Route exact path='/' render={(props) => (
           <PostList
             posts={this.props.posts}
+            sortBy={this.state.sortPostsBy}
             postCategory={undefined}
             upvote={this.upvote}
             downvote={this.downvote}
@@ -102,6 +113,7 @@ class App extends Component {
         <Route path='/:category' render={(props) => (
           <PostList
             posts={this.props.posts}
+            sortBy={this.state.sortPostsBy}
             postCategory={props.match.params.category}
             upvote={this.upvote}
             downvote={this.downvote}

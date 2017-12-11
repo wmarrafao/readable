@@ -15,7 +15,7 @@ export default function PostList (props) {
             }
             return post.deleted === false;
           })
-          .sort(sortBy('-voteScore')).map((post) => (
+          .sort(sortBy(props.sortBy)).map((post) => (
             <Post
               key={post.id}
               id={post.id}
