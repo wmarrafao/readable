@@ -8,10 +8,12 @@
     "react-dom": "^16.1.1",
     "react-modal": "^3.1.4",
     "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.17",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
-    "shortid": "^2.2.8"
+    "shortid": "^2.2.8",
+    "sort-by": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

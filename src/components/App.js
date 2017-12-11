@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
+import { Route, Link, withRouter } from 'react-router-dom';
 import { remove, upvote, downvote, fetchPosts } from '../actions';
+import PostList from './PostList';
 import CreatePost from './CreatePost';
 import EditPost from './EditPost';
-import Post from './Post';
 import * as api from '../utils/api';
 
 class App extends Component {
@@ -60,10 +60,21 @@ class App extends Component {
   };
 
   render() {
-    let postCounter = 1;
     return (
       <div className="root">
         <h1> Welcome to Readable </h1>
+        <div>
+          <Link to='/react'>React</Link>
+          <span> | </span>
+          <Link to='/redux'>Redux</Link>
+          <span> | </span>
+          <Link to='/javascript'>JavaScript</Link>
+          <span> | </span>
+          <Link to='functional'>Functional Programming</Link>
+          <span> | </span>
+          <Link to='udacity'>Udacity</Link>
+        </div>
+        <br/>
         <button onClick={this.openCreatePostModal}>New Post</button>
         <br/>
         <br/>
@@ -74,32 +85,31 @@ class App extends Component {
             isOpen={this.state.editPostModalOpen}
             closeModal={this.closeEditPostModal}
             post={this.props.posts.find(post => post.id === this.state.id)}
-           />
+          />
           : null
         }
-        <table>
-          <tbody>
-            {
-              this.props.posts.filter(post => post.deleted === false).map((post) => (
-                <Post
-                  key={post.id}
-                  id={post.id}
-                  rank={postCounter++}
-                  title={post.title}
-                  voteScore={post.voteScore}
-                  author={post.author}
-                  timesFromNow={moment(post.timestamp).fromNow()}
-                  commentCount={post.commentCount}
-                  upvote={this.upvote}
-                  downvote={this.downvote}
-                  openEditModal={this.openEditPostModal}
-                  closeEditModal={this.closeEditPostModal}
-                  delete={this.delete}
-                />
-              ))
-            }
-          </tbody>
-      </table>
+        <Route exact path='/' render={(props) => (
+          <PostList
+            posts={this.props.posts}
+            postCategory={undefined}
+            upvote={this.upvote}
+            downvote={this.downvote}
+            openEditModal={this.openEditPostModal}
+            closeEditModal={this.closeEditPostModal}
+            delete={this.delete}
+          />
+        )}/>
+        <Route path='/:category' render={(props) => (
+          <PostList
+            posts={this.props.posts}
+            postCategory={props.match.params.category}
+            upvote={this.upvote}
+            downvote={this.downvote}
+            openEditModal={this.openEditPostModal}
+            closeEditModal={this.closeEditPostModal}
+            delete={this.delete}
+          />
+        )}/>
       </div>
     );
   }
@@ -118,4 +128,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

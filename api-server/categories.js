@@ -14,6 +14,14 @@ const defaultData = {
         path: 'redux'
       },
       {
+        name: 'javascript',
+        path: 'javascript'
+      },
+      {
+        name: 'functional_programming',
+        path: 'function'
+      },
+      {
         name: 'udacity',
         path: 'udacity'
       }
