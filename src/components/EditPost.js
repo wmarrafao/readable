@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal'
 import { connect } from 'react-redux';
-import { edit } from '../actions';
+import { edit, setCurrentPost } from '../actions';
 import * as api from '../utils/api';
 import '../App.css';
 
@@ -13,7 +13,7 @@ class EditPost extends Component {
       title: "",
       body: "",
       author: "",
-      category: "",
+      category: this.props.category,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -48,6 +48,13 @@ class EditPost extends Component {
 
     this.props.editPost({ id: this.props.post.id, data: updatedPost, property:'posts' });
     api.editPost(this.props.post.id, JSON.stringify(updatedPost));
+    if (this.props.currentPost.id === this.props.post.id) {
+      this.props.setCurrentPost({
+        ...this.props.currentPost,
+        title: this.state.title,
+        body: this.state.body,
+      })
+    }
     this.props.closeModal();
   }
 
@@ -96,13 +103,14 @@ class EditPost extends Component {
   }
 }
 
-function mapStateToProps() {
-  return {};
+function mapStateToProps({ currentPost }) {
+  return { currentPost };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     editPost: (data) => dispatch(edit(data)),
+    setCurrentPost: (data) => dispatch(setCurrentPost({ data })),
   }
 }
 

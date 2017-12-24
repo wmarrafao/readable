@@ -5,7 +5,9 @@ export const EDIT = "EDIT";
 export const REMOVE = "REMOVE";
 export const INCREMENT_SCORE = "INCREMENT_SCORE";
 export const DECREMENT_SCORE = "DECREMENT_SCORE";
-export const RECEIVE_POSTS = "RECEIVE_POSTS";
+export const RECEIVE_DATA = "RECEIVE_DATA";
+export const CLEAR_COMMENTS = "CLEAR_COMMENTS";
+export const SET_CURRENT_POST = "SET_CURRENT_POST";
 
 export function add ({ data, property }) {
   return {
@@ -48,9 +50,9 @@ export function downvote ({ id, property }) {
   }
 }
 
-export const receivePosts = ({ data, property }) => {
+export const receive = ({ data, property }) => {
   return {
-    type: RECEIVE_POSTS,
+    type: RECEIVE_DATA,
     data,
     property
   }
@@ -59,7 +61,29 @@ export const receivePosts = ({ data, property }) => {
 export const fetchPosts = () => dispatch => (
   api.fetchPosts().then((response) => {
     response.json().then((posts) => {
-      dispatch(receivePosts({data: posts, property: 'posts'}))
+      dispatch(receive({data: posts, property: 'posts'}))
     });
   })
 );
+
+export const fetchComments = (postId) => dispatch => (
+  api.fetchComments(postId).then((response) => {
+    response.json().then((comments) => {
+      dispatch(receive({data: comments, property: 'comments'}))
+    });
+  })
+);
+
+export const clearComments = () => {
+  return {
+    type: CLEAR_COMMENTS,
+    data: [],
+  }
+};
+
+export const setCurrentPost = ({ data }) => {
+  return {
+    type: SET_CURRENT_POST,
+    data,
+  }
+};

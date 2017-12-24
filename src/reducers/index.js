@@ -4,16 +4,16 @@ import {
   REMOVE,
   INCREMENT_SCORE,
   DECREMENT_SCORE,
-  RECEIVE_POSTS,
+  RECEIVE_DATA,
+  CLEAR_COMMENTS,
+  SET_CURRENT_POST
 } from '../actions'
 
-function reducer(state = { posts:[], comments:[] }, action) {
+function reducer(state = { posts:[], currentPost:{}, comments:[] }, action) {
   const { data, property, id } = action;
 
   switch (action.type) {
     case ADD:
-    console.log(property);
-    console.log(state[property]);
       return {
         ...state,
         [property]: state[property].concat([data])
@@ -64,11 +64,21 @@ function reducer(state = { posts:[], comments:[] }, action) {
         return obj
       })
     }
-    case RECEIVE_POSTS:
+    case RECEIVE_DATA:
       return {
         ...state,
         [property]: state[property].concat(data)
       };
+    case CLEAR_COMMENTS:
+      return {
+        ...state,
+        'comments': data,
+      };
+    case SET_CURRENT_POST:
+      return {
+        ...state,
+        'currentPost': data,
+      }
     default:
       return state;
   }

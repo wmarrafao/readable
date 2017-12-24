@@ -1,19 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Route, Link, withRouter } from 'react-router-dom';
-import { remove, upvote, downvote, fetchPosts } from '../actions';
+import { Route, Link, Redirect, withRouter } from 'react-router-dom';
+import { remove, upvote, downvote, fetchPosts, setCurrentPost } from '../actions';
 import PostList from './PostList';
+import PostDetails from './PostDetails';
 import CreatePost from './CreatePost';
 import EditPost from './EditPost';
 import * as api from '../utils/api';
 
 class App extends Component {
 
-  state = {
-    createPostModalOpen: false,
-    editPostModalOpen: false,
-    sortPostsBy: "-voteScore",
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      createPostModalOpen: false,
+      editPostModalOpen: false,
+      sortPostsBy: "-voteScore",
+      postDeleted: false,
+    };
+    this.handleSortChange = this.handleSortChange.bind(this);
+  }
 
   componentDidMount() {
     this.props.fetchPosts();
@@ -57,11 +63,17 @@ class App extends Component {
   delete = (id, property) => {
     this.props.delete(id, property);
     api.deletePost(id);
+    this.props.history.push('/');
   };
 
   handleSortChange = (event) => {
     this.setState({sortPostsBy: event.target.value});
   }
+
+  tooglePostDeleted = (value) => {
+    this.setState({ postDeleted: value });
+  }
+
   render() {
     return (
       <div className="root">
@@ -73,21 +85,12 @@ class App extends Component {
           <span> | </span>
           <Link to='/javascript'>JavaScript</Link>
           <span> | </span>
-          <Link to='functional'>Functional Programming</Link>
+          <Link to='/functional'>Functional Programming</Link>
           <span> | </span>
-          <Link to='udacity'>Udacity</Link>
+          <Link to='/udacity'>Udacity</Link>
         </div>
         <br/>
-        <button onClick={this.openCreatePostModal}>New Post</button>
-        <label>
-          Order by:
-          <select onChange={this.handleSortChange} value={this.state.sortPostsBy}>
-            <option value="-timestamp">date</option>
-            <option value="-voteScore">points</option>
-          </select>
-        </label>
-        <br/>
-        <br/>
+
         <CreatePost isOpen={this.state.createPostModalOpen} closeModal={this.closeCreatePostModal}/>
         {
           this.state.editPostModalOpen
@@ -101,7 +104,9 @@ class App extends Component {
         <Route exact path='/' render={(props) => (
           <PostList
             posts={this.props.posts}
+            openCreatePostModal={this.openCreatePostModal}
             sortBy={this.state.sortPostsBy}
+            handleSortChange={this.handleSortChange}
             postCategory={undefined}
             upvote={this.upvote}
             downvote={this.downvote}
@@ -110,10 +115,12 @@ class App extends Component {
             delete={this.delete}
           />
         )}/>
-        <Route path='/:category' render={(props) => (
+        <Route exact path='/:category' render={(props) => (
           <PostList
             posts={this.props.posts}
+            openCreatePostModal={this.openCreatePostModal}
             sortBy={this.state.sortPostsBy}
+            handleSortChange={this.handleSortChange}
             postCategory={props.match.params.category}
             upvote={this.upvote}
             downvote={this.downvote}
@@ -121,6 +128,21 @@ class App extends Component {
             closeEditModal={this.closeEditPostModal}
             delete={this.delete}
           />
+        )}/>
+
+        <Route exact path='/:category/:id' render={({ match }) => (
+          this.state.postDeleted? (
+            <Redirect to='/'/>
+          ) : (
+            <PostDetails
+              id={match.params.id}
+              upvote={this.upvote}
+              downvote={this.downvote}
+              openEditModal={this.openEditPostModal}
+              closeEditModal={this.closeEditPostModal}
+              delete={this.delete}
+            />
+          )
         )}/>
       </div>
     );
@@ -133,10 +155,11 @@ function mapStateToProps({ posts, comments }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchPosts: () => dispatch(fetchPosts()),
+    fetchPosts: (property) => dispatch(fetchPosts(property)),
     upVote: (id, property) => dispatch(upvote({ id, property })),
     downVote: (id, property) => dispatch(downvote({ id, property })),
-    delete: (id, property) => dispatch(remove({ id, property }))
+    delete: (id, property) => dispatch(remove({ id, property })),
+    setCurrentPost: (data) => dispatch(setCurrentPost({ data })),
   };
 }
 

@@ -14,7 +14,7 @@ class CreatePost extends Component {
       title: "",
       body: "",
       author: "",
-      category: "",
+      category: "react",
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -47,6 +47,12 @@ class CreatePost extends Component {
 
     this.props.addPost({data: post, property:"posts"});
     api.addPost(JSON.stringify(post));
+    this.setState({
+      title: "",
+      body: "",
+      author: "",
+      category: "",
+    });
     this.props.closeModal();
   }
 
