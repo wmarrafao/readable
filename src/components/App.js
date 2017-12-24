@@ -50,20 +50,20 @@ class App extends Component {
     }));
   };
 
-  upvote = (id, property) => {
-    this.props.upVote(id, property);
+  upvotePost = (id) => {
+    this.props.upVote(id, 'posts');
     api.updateScore(id, JSON.stringify({option: 'upVote'}));
   };
 
-  downvote = (id, property) => {
-    this.props.downVote(id, property);
+  downvotePost = (id) => {
+    this.props.downVote(id, 'posts');
     api.updateScore(id, JSON.stringify({option: 'downVote'}));
   };
 
   delete = (id, property) => {
     this.props.delete(id, property);
     api.deletePost(id);
-    this.props.history.push('/');
+    this.props.history.replace('/');
   };
 
   handleSortChange = (event) => {
@@ -77,6 +77,7 @@ class App extends Component {
   render() {
     return (
       <div className="root">
+        <Link to='/'>HOME</Link>
         <h1> Welcome to Readable </h1>
         <div>
           <Link to='/react'>React</Link>
@@ -108,41 +109,41 @@ class App extends Component {
             sortBy={this.state.sortPostsBy}
             handleSortChange={this.handleSortChange}
             postCategory={undefined}
-            upvote={this.upvote}
-            downvote={this.downvote}
+            upvote={this.upvotePost}
+            downvote={this.downvotePost}
             openEditModal={this.openEditPostModal}
             closeEditModal={this.closeEditPostModal}
             delete={this.delete}
           />
         )}/>
         <Route exact path='/:category' render={(props) => (
-          <PostList
-            posts={this.props.posts}
-            openCreatePostModal={this.openCreatePostModal}
-            sortBy={this.state.sortPostsBy}
-            handleSortChange={this.handleSortChange}
-            postCategory={props.match.params.category}
-            upvote={this.upvote}
-            downvote={this.downvote}
-            openEditModal={this.openEditPostModal}
-            closeEditModal={this.closeEditPostModal}
-            delete={this.delete}
-          />
-        )}/>
-
-        <Route exact path='/:category/:id' render={({ match }) => (
-          this.state.postDeleted? (
-            <Redirect to='/'/>
+          props.match.params.category !== 'react' &&   props.match.params.category !== 'redux' &&   props.match.params.category !== 'javascript' &&   props.match.params.category !== 'functional' &&   props.match.params.category !== 'udacity'?(
+              <Redirect to='/'/>
           ) : (
-            <PostDetails
-              id={match.params.id}
-              upvote={this.upvote}
-              downvote={this.downvote}
+            <PostList
+              posts={this.props.posts}
+              openCreatePostModal={this.openCreatePostModal}
+              sortBy={this.state.sortPostsBy}
+              handleSortChange={this.handleSortChange}
+              postCategory={props.match.params.category}
+              upvote={this.upvotePost}
+              downvote={this.downvotePost}
               openEditModal={this.openEditPostModal}
               closeEditModal={this.closeEditPostModal}
               delete={this.delete}
             />
           )
+        )}/>
+
+        <Route exact path='/:category/:id' render={({ match }) => (
+          <PostDetails
+            id={match.params.id}
+            upvote={this.upvotePost}
+            downvote={this.downvotePost}
+            openEditModal={this.openEditPostModal}
+            closeEditModal={this.closeEditPostModal}
+            delete={this.delete}
+          />
         )}/>
       </div>
     );

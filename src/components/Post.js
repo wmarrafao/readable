@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 export default function Post(props) {
   return (
     <span>
-        {props.rank}.
+        {props.rank}
         <button onClick={(id) => props.upvote(props.id)}>upvote</button>
         <button onClick={(id) => props.downvote(props.id)}>downvote</button>
         <Link to={`/${props.category}/${props.id}`}> {props.title} </Link>

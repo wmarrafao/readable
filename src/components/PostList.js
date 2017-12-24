@@ -31,7 +31,7 @@ export default function PostList (props) {
                 <td>
                   <Post
                     id={post.id}
-                    rank={postCounter++}
+                    rank={`${postCounter++}.`}
                     category={post.category}
                     title={post.title}
                     voteScore={post.voteScore}

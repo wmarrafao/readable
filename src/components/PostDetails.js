@@ -23,6 +23,9 @@ class PostDetails extends Component {
     if (currentPost === undefined) {
       api.fetchPost(this.props.id).then((response) => {
         response.json().then((post) => {
+          if (post.error || post.id === undefined) {
+            this.props.history.replace('/');
+          }
           this.props.setCurrentPost(post);
         });
       });
@@ -109,7 +112,7 @@ class PostDetails extends Component {
       <div>
         <Post
           id={this.props.currentPost.id}
-          rank={1}
+          rank={null}
           category={this.props.currentPost.category}
           title={this.props.currentPost.title}
           voteScore={this.props.currentPost.voteScore}
