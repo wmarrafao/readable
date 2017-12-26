@@ -17,7 +17,7 @@ export default function PostList (props) {
       </label>
       <br/>
       <br/>
-      <table>
+      <table className={'postList'}>
         <tbody>
           {
             props.posts.filter( (post) => {

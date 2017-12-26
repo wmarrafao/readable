@@ -51,8 +51,8 @@ class PostDetails extends Component {
       deleted: false,
       voteScore: 1,
       parentDeleted: false,
-    }
-    this.props.addComment(comment, 'comments')
+    };
+    this.props.addComment(comment, 'comments');
     api.addComment(JSON.stringify(comment));
     this.setState({ comment: "" });
 
@@ -67,7 +67,7 @@ class PostDetails extends Component {
     this.props.setCurrentPost({
       ...this.props.currentPost,
       voteScore: this.props.currentPost.voteScore+1,
-    })
+    });
   }
 
   downvotePost = (id) => {
@@ -75,7 +75,7 @@ class PostDetails extends Component {
     this.props.setCurrentPost({
       ...this.props.currentPost,
       voteScore: this.props.currentPost.voteScore-1,
-    })
+    });
   }
 
   upvoteComment = (id) => {
@@ -92,10 +92,10 @@ class PostDetails extends Component {
     let updatedComment = {
       timestamp: Date.now(),
       body: body,
-    }
-    this.props.editComment(id, updatedComment, 'comments')
+    };
+    this.props.editComment(id, updatedComment, 'comments');
     api.updateComment(JSON.stringify(updatedComment), id);
-    closeModal()
+    closeModal();
   }
 
   deleteComment = (id) => {
@@ -109,10 +109,10 @@ class PostDetails extends Component {
 
   render() {
     return (
-      <div>
+      <div className={'PostDetails'}>
         <Post
           id={this.props.currentPost.id}
-          rank={null}
+          rank={'\u0020'}
           category={this.props.currentPost.category}
           title={this.props.currentPost.title}
           voteScore={this.props.currentPost.voteScore}
@@ -127,11 +127,11 @@ class PostDetails extends Component {
         />
         <p> {this.props.currentPost.body} </p>
         <br/>
-        <br/>
         <textarea value={this.state.comment} onChange={this.handleCommentChange} rows={6} cols={60}/>
         <br/>
-        <button onClick={this.submitComment}>Add Comment</button>
-
+        <button onClick={this.submitComment} className={'addComment'}>Add Comment</button>
+        <br/>
+        <br/>
         {
           this.props.comments.filter(comment => comment.deleted === false).map((comment) => (
             <Comment

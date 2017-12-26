@@ -73,14 +73,17 @@ class CreatePost extends Component {
               <label className="createPostLabel">
                 Title:
                 <input type="text" name="title" value={this.state.title} onChange={this.handleInputChange} />
+                <br/>
               </label>
               <label className="createPostLabel">
                 Body:
                 <textarea name="body" value={this.state.body} onChange={this.handleInputChange} rows={10}/>
+                <br/>
               </label>
               <label className="createPostLabel">
                 Author:
                 <input type="text" name="author" value={this.state.author} onChange={this.handleInputChange} />
+                <br/>
               </label>
               <label className="createPostLabel">
                 Category:
@@ -90,6 +93,7 @@ class CreatePost extends Component {
                   <option value="js">Javascript</option>
                   <option value="functional">Functional Programming</option>
                 </select>
+                <br/>
               </label>
               <input type="submit" value="Submit"/>
             </form>

@@ -34,7 +34,7 @@ class App extends Component {
   closeCreatePostModal = () => {
     this.setState(() => ({
       createPostModalOpen: false,
-    }))
+    }));
   };
 
   openEditPostModal = (id) => {
@@ -77,7 +77,8 @@ class App extends Component {
   render() {
     return (
       <div className="root">
-        <Link to='/'>HOME</Link>
+        <Link to='/' className='home'> HOME </Link>
+
         <h1> Welcome to Readable </h1>
         <div>
           <Link to='/react'>React</Link>
@@ -102,6 +103,7 @@ class App extends Component {
           />
           : null
         }
+
         <Route exact path='/' render={(props) => (
           <PostList
             posts={this.props.posts}
@@ -116,9 +118,10 @@ class App extends Component {
             delete={this.delete}
           />
         )}/>
+
         <Route exact path='/:category' render={(props) => (
-          props.match.params.category !== 'react' &&   props.match.params.category !== 'redux' &&   props.match.params.category !== 'javascript' &&   props.match.params.category !== 'functional' &&   props.match.params.category !== 'udacity'?(
-              <Redirect to='/'/>
+          props.match.params.category !== 'react' && props.match.params.category !== 'redux' && props.match.params.category !== 'javascript' && props.match.params.category !== 'functional' && props.match.params.category !== 'udacity'?(
+            <Redirect to='/'/>
           ) : (
             <PostList
               posts={this.props.posts}
